@@ -31,7 +31,7 @@ export function Intro() {
                             <ShoppingCart size={16} color="#fff" weight="fill" />
                         </IconContainer>
                         <span>Compra simples e segura</span>
-                    </FeatureItem>
+                    </FeatureItem> 
 
                     <FeatureItem>
                         <IconContainer variant="gray">
