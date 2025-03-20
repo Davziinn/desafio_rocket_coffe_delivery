@@ -14,84 +14,94 @@ import {
     ConfirmButton
 } from './styles';
 
-import coffeeTrad from '../../../../assets/coffe-tradicional.svg'
 import { Trash } from '@phosphor-icons/react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../../../context/CartContext';
+import { formatPrice } from '../../../../utils/formatPrice';
 
 export function CardSelecionado() {
-return (
-    <Card>
-        <CartItem>
-            <ProductImage src={coffeeTrad} alt="Expresso Tradicional" />
-            <ProductInfo>
-                <ProductName>
-                    Expresso Tradicional
-                </ProductName>
-                <QuantityControl>
-                    <QuantityButton>
-                        −
-                    </QuantityButton>
+    const navigate = useNavigate();
+    const { 
+        cartItems, 
+        removeFromCart, 
+        updateCartItemQuantity,
+        cartTotal 
+    } = useCart();
 
-                    <QuantityText>
-                        1
-                    </QuantityText>
+    const deliveryCost = cartItems.length > 0 ? 3.5 : 0;
+    const totalWithDelivery = cartTotal + deliveryCost;
 
-                    <QuantityButton color="#8047F8">
-                        +
-                    </QuantityButton>
+    function handleIncrementQuantity(id: string, currentQuantity: number) {
+        updateCartItemQuantity(id, currentQuantity + 1);
+    }
 
-                    <RemoveButton>
-                        <Trash color="#8047F8" size={32} style={{ padding: '5px' }} />
-                        REMOVER
-                    </RemoveButton>
-                </QuantityControl>
-            </ProductInfo>
-            <Price>R$ 9,90</Price>
-        </CartItem>
+    function handleDecrementQuantity(id: string, currentQuantity: number) {
+        if (currentQuantity > 1) {
+            updateCartItemQuantity(id, currentQuantity - 1);
+        }
+    }
 
-        <CartItem>
-            <ProductImage src={coffeeTrad} alt="Expresso Tradicional" />
-            <ProductInfo>
-                <ProductName>
-                    Expresso Tradicional
-                </ProductName>
-                <QuantityControl>
-                    <QuantityButton>
-                        −
-                    </QuantityButton>
+    return (
+        <Card>
+            {cartItems.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>Seu carrinho está vazio</div>
+            ) : (
+                <>
+                    {cartItems.map(item => (
+                        <CartItem key={item.id}>
+                            <ProductImage src={item.image} alt={item.name} />
+                            <ProductInfo>
+                                <ProductName>
+                                    {item.name}
+                                </ProductName>
+                                <QuantityControl>
+                                    <QuantityButton 
+                                        onClick={() => handleDecrementQuantity(item.id, item.quantity)}
+                                    >
+                                        −
+                                    </QuantityButton>
 
-                    <QuantityText>
-                        1
-                    </QuantityText>
+                                    <QuantityText>
+                                        {item.quantity}
+                                    </QuantityText>
 
-                    <QuantityButton color="#8047F8">
-                        +
-                    </QuantityButton>
+                                    <QuantityButton 
+                                        color="#8047F8"
+                                        onClick={() => handleIncrementQuantity(item.id, item.quantity)}
+                                    >
+                                        +
+                                    </QuantityButton>
 
-                    <RemoveButton>
-                        <Trash color="#8047F8" size={32} style={{ padding: '5px' }} />
-                        REMOVER
-                    </RemoveButton>
-                </QuantityControl>
-            </ProductInfo>
-            <Price>R$ 9,90</Price>
-        </CartItem>
+                                    <RemoveButton onClick={() => removeFromCart(item.id)}>
+                                        <Trash color="#8047F8" size={16} />
+                                        REMOVER
+                                    </RemoveButton>
+                                </QuantityControl>
+                            </ProductInfo>
+                            <Price>R$ {formatPrice(item.price * item.quantity)}</Price>
+                        </CartItem>
+                    ))}
 
-        <TotalSection>
-            <TotalRow>
-                <span>Total de itens</span>
-                <span>R$ 29,70</span>
-            </TotalRow>
-            <TotalRow>
-                <span>Entrega</span>
-                <span>R$ 3,50</span>
-            </TotalRow>
-            <TotalRow isMainTotal>
-                <span>Total</span>
-                <span>R$ 33,20</span>
-            </TotalRow>
-        </TotalSection>
+                    <TotalSection>
+                        <TotalRow>
+                            <span>Total de itens</span>
+                            <span>R$ {formatPrice(cartTotal)}</span>
+                        </TotalRow>
+                        <TotalRow>
+                            <span>Entrega</span>
+                            <span>R$ {formatPrice(deliveryCost)}</span>
+                        </TotalRow>
+                        <TotalRow isMainTotal>
+                            <span>Total</span>
+                            <span>R$ {formatPrice(totalWithDelivery)}</span>
+                        </TotalRow>
+                    </TotalSection>
 
-        <ConfirmButton>Confirmar Pedido</ConfirmButton>
+                    <ConfirmButton onClick={() => navigate("/success")}>
+                        Confirmar Pedido
+                    </ConfirmButton>
+                </>
+            )}
         </Card>
     );
 }

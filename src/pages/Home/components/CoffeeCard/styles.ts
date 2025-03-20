@@ -10,6 +10,7 @@ export const CardContainer = styled.div`
     flex-direction: column;
     align-items: center;
     position: relative;
+    font-family: 'Roboto', sans-serif;
     
     * {
         background-color: transparent;
