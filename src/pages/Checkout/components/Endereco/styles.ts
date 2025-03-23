@@ -45,9 +45,9 @@ export const AddressForm = styled.form`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    `;
+`;
 
-    export const InputGroup = styled.div`
+export const InputGroup = styled.div`
     display: flex;
     gap: 12px;
     width: 100%;
@@ -67,6 +67,7 @@ export const AddressForm = styled.form`
     .complemento-wrapper {
         position: relative;
         max-width: 100%;
+        flex: 1;
     }
 `;
 
@@ -85,6 +86,10 @@ export const Input = styled.input`
     &:focus {
         outline: 1px solid #C47F17;
     }
+    
+    &.error {
+        border-color: #D73035;
+    }
 `;
 
 export const SmallInput = styled(Input)`
@@ -96,7 +101,7 @@ export const MediumInput = styled(Input)`
     
     &:first-child {
         &.cep-row {
-        width: 200px;
+            width: 200px;
         }
     }
 `;
@@ -113,4 +118,36 @@ export const OptionalLabel = styled.span`
     font-size: 0.75rem;
     font-style: italic;
     color: #8D8686;
+`;
+
+export const ErrorMessage = styled.span`
+    color: #D73035;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 4px;
+    margin-left: 2px;
+`;
+
+export const SubmitButton = styled.button`
+    background: #DBAC2C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 8px;
+    
+    &:hover {
+        background: #C47F17;
+    }
+    
+    &:disabled {
+        background: #E6E5E5;
+        cursor: not-allowed;
+    }
 `;

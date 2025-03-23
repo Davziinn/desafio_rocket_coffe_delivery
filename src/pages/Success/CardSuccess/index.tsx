@@ -1,9 +1,14 @@
+import React from 'react';
 import { CurrencyDollar, MapPin, Timer } from '@phosphor-icons/react';
 import carinhaNaMotinha from '../../../assets/carinha_na_motinha.svg';
 import { ImageContainer, InfoWithIcon, OrderInfo, OrderInfoContainer } from './styles';
-
+import { useCart } from '../../../context/CartContext';
 
 export function CardSuccess() {
+    const { addressData, paymentMethod } = useCart();
+    
+    if (!addressData) return null;
+
     return (
         <>
             <OrderInfoContainer>
@@ -11,8 +16,9 @@ export function CardSuccess() {
                     <InfoWithIcon iconBg="#8047F8">
                         <MapPin weight="fill" size={32} color="#FFFFFF" />
                         <OrderInfo>
-                            <span>Entrega em <strong>Rua João Daniel Martinelli, 102</strong></span>
-                            <span>Farrapos - Porto Alegre, RS</span>
+                            <span>Entrega em <strong>{addressData.street}, {addressData.number}</strong></span>
+                            <span>{addressData.neighborhood} - {addressData.city}, {addressData.state}</span>
+                            {addressData.complement && <span>Complemento: {addressData.complement}</span>}
                         </OrderInfo>
                     </InfoWithIcon>
 
@@ -20,7 +26,7 @@ export function CardSuccess() {
                         <Timer weight="fill" size={32} color="#FFFFFF" />
                         <OrderInfo>
                             <span>Previsão de entrega</span>
-                            <span>'<strong>20 min - 30 min</strong></span>
+                            <span><strong>20 min - 30 min</strong></span>
                         </OrderInfo>
                     </InfoWithIcon>
 
@@ -28,7 +34,7 @@ export function CardSuccess() {
                         <CurrencyDollar weight="fill" size={32} color="#FFFFFF" />
                         <OrderInfo>
                             <span>Pagamento na entrega</span>
-                            <span><strong>Cartão de Crédito</strong></span>
+                            <span><strong>{paymentMethod}</strong></span>
                         </OrderInfo>
                     </InfoWithIcon>
                 </div>
@@ -38,5 +44,5 @@ export function CardSuccess() {
                 </ImageContainer>
             </OrderInfoContainer>
         </>
-    )
+    );
 }

@@ -9,6 +9,16 @@ interface Coffee {
     quantity: number;
 }
 
+interface AddressData {
+    cep: string;
+    street: string;
+    number: string;
+    complement: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+}
+
 interface CartContextData {
     cartItems: Coffee[];
     addToCart: (coffee: Coffee) => void;
@@ -16,6 +26,11 @@ interface CartContextData {
     updateCartItemQuantity: (coffeeId: string, quantity: number) => void;
     cartQuantity: number;
     cartTotal: number;
+    addressData: AddressData | null;
+    setAddressData: (data: AddressData) => void;
+    paymentMethod: string;
+    setPaymentMethod: (method: string) => void;
+    clearCart: () => void;
 }
 
 export const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -26,6 +41,8 @@ interface CartProviderProps {
 
 export function CartProvider({ children }: CartProviderProps) {
     const [cartItems, setCartItems] = useState<Coffee[]>([]);
+    const [addressData, setAddressData] = useState<AddressData | null>(null);
+    const [paymentMethod, setPaymentMethod] = useState<string>('Cartão de Crédito');
 
     function addToCart(coffee: Coffee) {
         const coffeeAlreadyInCart = cartItems.findIndex(
@@ -67,6 +84,10 @@ export function CartProvider({ children }: CartProviderProps) {
         return total + (item.price * item.quantity);
     }, 0);
 
+    function clearCart() {
+        setCartItems([]);
+    }
+
     return (
         <CartContext.Provider 
             value={{ 
@@ -75,12 +96,17 @@ export function CartProvider({ children }: CartProviderProps) {
                 removeFromCart, 
                 updateCartItemQuantity, 
                 cartQuantity,
-                cartTotal 
+                cartTotal,
+                addressData,
+                setAddressData,
+                paymentMethod,
+                setPaymentMethod,
+                clearCart
             }}
-            >
+        >
             {children}
-            </CartContext.Provider>
-        );
+        </CartContext.Provider>
+    );
 }
 
 export function useCart(): CartContextData {

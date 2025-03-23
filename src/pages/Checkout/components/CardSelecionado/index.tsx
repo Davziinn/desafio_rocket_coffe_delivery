@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     Card,
     CartItem,
@@ -25,7 +26,8 @@ export function CardSelecionado() {
         cartItems, 
         removeFromCart, 
         updateCartItemQuantity,
-        cartTotal 
+        cartTotal,
+        addressData 
     } = useCart();
 
     const deliveryCost = cartItems.length > 0 ? 3.5 : 0;
@@ -39,6 +41,23 @@ export function CardSelecionado() {
         if (currentQuantity > 1) {
             updateCartItemQuantity(id, currentQuantity - 1);
         }
+    }
+
+    function handleConfirmOrder() {
+        // Validar se existe endereço
+        if (!addressData) {
+            alert('Por favor, preencha os dados de endereço antes de continuar.');
+            return;
+        }
+        
+        // Validar se existem itens no carrinho
+        if (cartItems.length === 0) {
+            alert('Seu carrinho está vazio. Adicione produtos para continuar.');
+            return;
+        }
+        
+        // Se tudo estiver ok, navegar para página de sucesso
+        navigate("/success");
     }
 
     return (
@@ -97,7 +116,7 @@ export function CardSelecionado() {
                         </TotalRow>
                     </TotalSection>
 
-                    <ConfirmButton onClick={() => navigate("/success")}>
+                    <ConfirmButton onClick={handleConfirmOrder}>
                         Confirmar Pedido
                     </ConfirmButton>
                 </>
